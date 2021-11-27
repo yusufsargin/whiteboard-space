@@ -1,0 +1,42 @@
+{
+  "root": "libs/whiteboard-ui",
+  "sourceRoot": "libs/whiteboard-ui/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/whiteboard-ui",
+        "tsConfig": "libs/whiteboard-ui/tsconfig.lib.json",
+        "project": "libs/whiteboard-ui/package.json",
+        "entryFile": "libs/whiteboard-ui/src/index.ts",
+        "external": ["react/jsx-runtime"],
+        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "assets": [
+          {
+            "glob": "libs/whiteboard-ui/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/whiteboard-ui/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/whiteboard-ui"],
+      "options": {
+        "jestConfig": "libs/whiteboard-ui/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

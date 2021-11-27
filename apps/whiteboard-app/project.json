@@ -1,0 +1,72 @@
+{
+  "root": "apps/whiteboard-app",
+  "sourceRoot": "apps/whiteboard-app/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/whiteboard-app",
+        "index": "apps/whiteboard-app/src/index.html",
+        "baseHref": "/",
+        "main": "apps/whiteboard-app/src/main.tsx",
+        "polyfills": "apps/whiteboard-app/src/polyfills.ts",
+        "tsConfig": "apps/whiteboard-app/tsconfig.app.json",
+        "assets": [
+          "apps/whiteboard-app/src/favicon.ico",
+          "apps/whiteboard-app/src/assets"
+        ],
+        "styles": ["apps/whiteboard-app/src/styles.scss"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/whiteboard-app/src/environments/environment.ts",
+              "with": "apps/whiteboard-app/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "options": {
+        "buildTarget": "whiteboard-app:build",
+        "hmr": true
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "whiteboard-app:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/whiteboard-app/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/whiteboard-app"],
+      "options": {
+        "jestConfig": "apps/whiteboard-app/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
