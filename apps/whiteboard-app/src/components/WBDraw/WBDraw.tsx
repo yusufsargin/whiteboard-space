@@ -1,23 +1,26 @@
 import React, {useContext, useRef} from 'react';
 import {WhiteboardAppContext} from "../../store";
 import {observer} from "mobx-react-lite";
+import {SvgContainer} from "../SvgContainer";
+import {AppMode} from "../../model";
 
 interface WBDrawProps {
   children?: React.ReactNode
 }
 
-const WBDraw = ({children}: WBDrawProps) => {
-  const {shapeState} = useContext(WhiteboardAppContext)
+const WBDrawComp = ({children}: WBDrawProps) => {
+  const {shapeState, appMode} = useContext(WhiteboardAppContext)
   const ref = useRef<HTMLDivElement | null>(null);
-  let mouseMoveEventActive = false
 
   const onMouseDown = () => {
-    mouseMoveEventActive = true
-    shapeState?.setDrawActive(true)
+    if (appMode === AppMode.DRAW_MODE) {
+
+      shapeState?.setDrawActive(true)
+    }
   }
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (shapeState?.drawActive) {
+    if (shapeState?.drawActive && appMode === AppMode.DRAW_MODE) {
       const {clientX, clientY} = e
 
       shapeState.addPoint(clientX, clientY)
@@ -25,16 +28,21 @@ const WBDraw = ({children}: WBDrawProps) => {
   }
 
   const onMouseUp = () => {
-    mouseMoveEventActive = false
-    shapeState?.setDrawActive(false)
+    if (appMode === AppMode.DRAW_MODE) {
+      shapeState?.setDrawActive(false)
+      shapeState?.addToShape()
+
+    }
   }
 
   return (
     <div ref={ref} className={"wb-draw w-100"} style={{height: "calc(100vh - 20px)"}} onMouseDown={onMouseDown}
          onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
-      {children}
+      <SvgContainer style={{width: "100%", height: "100%"}}>
+        {children}
+      </SvgContainer>
     </div>
   );
 };
 
-export default observer(WBDraw);
+export const WBDraw = observer(WBDrawComp);
