@@ -3,16 +3,19 @@ import {WhiteboardAppContext} from "../../store";
 import Shape from "../Shape/Shape";
 import {observer} from "mobx-react-lite";
 
-export const Scene = observer(() => {
+const SceneComp = () => {
   const {shapeState} = useContext(WhiteboardAppContext)
 
   return (
     <>
       {
-        shapeState?.points && <Shape points={shapeState.points} strokeSize={8}/>
+        shapeState?.drawingPoints && shapeState.drawActive &&
+        <Shape points={shapeState.drawingPoints ?? [[]]} strokeSize={8}/>
       }
-      {shapeState?.shapes && shapeState.shapes.map(shape => <Shape points={shape.points}
-                                                                   strokeSize={shape.strokeSize}/>)}
+      {shapeState?.shapes && shapeState.shapes.map(shape => <Shape points={shape?.points ?? [[]]}
+                                                                   strokeSize={8}/>)}
     </>
   );
-})
+}
+
+export const Scene = observer(SceneComp)

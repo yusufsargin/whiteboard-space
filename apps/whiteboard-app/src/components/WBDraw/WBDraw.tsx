@@ -20,18 +20,17 @@ const WBDrawComp = ({children}: WBDrawProps) => {
   }
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (shapeState?.drawActive && appMode === AppMode.DRAW_MODE) {
+    if (shapeState?.drawActive) {
       const {clientX, clientY} = e
 
-      shapeState.addPoint(clientX, clientY)
+      shapeState.addNewPoint(clientX, clientY)
     }
   }
 
   const onMouseUp = () => {
-    if (appMode === AppMode.DRAW_MODE) {
+    if (shapeState?.drawActive) {
       shapeState?.setDrawActive(false)
-      shapeState?.addToShape()
-
+      shapeState.addNewShape()
     }
   }
 

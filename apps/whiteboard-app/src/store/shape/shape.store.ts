@@ -1,61 +1,65 @@
 import {WhiteboardAppStateProps} from "../index";
+import {BaseShapeModel} from "../../model";
 import {makeAutoObservable} from "mobx";
-import {ShapeModel} from "../../model";
 
-interface ShapeStateProps {
-  points: Array<Array<number>> | undefined
-  drawActive: boolean
-  shapes?: ShapeModel[]
-}
-
-export class ShapeState implements ShapeStateProps {
-  private _points: Array<Array<number>> | undefined
+export class ShapeState {
+  private _shapes: BaseShapeModel[] | undefined = undefined
+  private _drawingPoints: number[][] | undefined
   private _drawActive = false
-  private _shapes: ShapeModel[] | undefined = undefined
+  private _currentShape: BaseShapeModel | undefined
 
   constructor(public rootState: WhiteboardAppStateProps) {
     makeAutoObservable(this)
   }
 
-  addPoint(clientX: number, clientY: number) {
-    if (this._points) {
-      this._points.push([clientX, clientY])
+  public addNewShape() {
+    if (this._drawingPoints && this._currentShape) {
+      console.log("Current Shape", this._currentShape)
+      if (this._shapes) {
+        this._shapes.push(this._currentShape)
+      } else {
+        this._shapes = [this._currentShape]
+      }
+      this.reset()
+    }
+  }
+
+  addNewPoint(x: number, y: number) {
+    if (this._drawingPoints) {
+      this._drawingPoints.push([x, y])
+      this.addPointToObject(x, y)
     } else {
-      this._points = [[clientX, clientY]]
+      this._drawingPoints = [[x, y]]
+      this.addPointToObject(x, y)
     }
   }
 
-  addToShape() {
-    if (this.points) {
-      this.appendShape({
-        points: this.points,
-        strokeSize: 8
-      })
-      this._points = undefined
+  addPointToObject(x: number, y: number) {
+    if (this._currentShape) {
+      this._currentShape.addNewPoint(x, y)
+    } else {
+      this._currentShape = new BaseShapeModel([[x, y]])
     }
   }
 
-  setDrawActive(value: boolean) {
-    this._drawActive = value
+  reset() {
+    this._drawingPoints = undefined
+    this._currentShape = undefined
   }
 
-  get points(): Array<Array<number>> | undefined {
-    return this._points;
+  get shapes(): BaseShapeModel[] | undefined {
+    return this._shapes;
+  }
+
+  get drawingPoints(): number[][] | undefined {
+    return this._drawingPoints;
   }
 
   get drawActive(): boolean {
     return this._drawActive;
   }
 
-  get shapes(): ShapeModel[] | undefined {
-    return this._shapes;
-  }
-
-  private appendShape(shape: ShapeModel) {
-    if (this.shapes) {
-      this.shapes?.push(shape)
-    } else {
-      this._shapes = [shape]
-    }
+  public setDrawActive(value: boolean) {
+    this._drawActive = value
   }
 }
