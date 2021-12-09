@@ -1,21 +1,21 @@
 import React, {useContext} from 'react';
 import {WhiteboardAppContext} from "../../store";
-import {AppMode} from "../../model";
+import {APP_MODE} from "../../types";
+import {observer} from "mobx-react-lite";
 
 const AppModeChanger = () => {
-  const {setAppMode, appMode} = useContext(WhiteboardAppContext);
-  console.log(appMode)
+  const {settingsState} = useContext(WhiteboardAppContext);
+
   return (
     <button style={{
       position: "fixed",
       left: 100,
       bottom: 0
     }} onClick={() => {
-      console.log(appMode)
-      if (appMode === AppMode.SELECTION_MODE) {
-        setAppMode(AppMode.DRAW_MODE)
+      if (settingsState?.getAppMode() === APP_MODE.SELECTION_MODE) {
+        settingsState?.changeAppMode(APP_MODE.DRAWING_MODE)
       } else {
-        setAppMode(AppMode.SELECTION_MODE)
+        settingsState?.changeAppMode(APP_MODE.SELECTION_MODE)
       }
     }}>
       Change
@@ -23,4 +23,4 @@ const AppModeChanger = () => {
   );
 };
 
-export default AppModeChanger;
+export default observer(AppModeChanger);

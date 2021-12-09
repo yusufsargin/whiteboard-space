@@ -1,14 +1,16 @@
 import React, {useContext} from 'react';
 import {WhiteboardAppContext} from "../../store";
-import {AppMode} from "../../model";
+import {APP_MODE} from "../../types";
+import {observer} from "mobx-react-lite";
 
 function AppModeComponent() {
-  const {appMode} = useContext(WhiteboardAppContext);
+  const {settingsState} = useContext(WhiteboardAppContext);
+  const appMode = settingsState?.getAppMode()
   let mode = "selection-mode"
 
-  if (appMode === AppMode.SELECTION_MODE) {
+  if (appMode === APP_MODE.SELECTION_MODE) {
     mode = "selection-mode"
-  } else if (appMode === AppMode.DRAW_MODE) {
+  } else if (appMode === APP_MODE.DRAWING_MODE) {
     mode = "draw-mode"
   }
 
@@ -25,4 +27,4 @@ function AppModeComponent() {
   );
 }
 
-export default AppModeComponent;
+export default observer(AppModeComponent);

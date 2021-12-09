@@ -2,25 +2,25 @@ import React, {useContext, useRef} from 'react';
 import {WhiteboardAppContext} from "../../store";
 import {observer} from "mobx-react-lite";
 import {SvgContainer} from "../SvgContainer";
-import {AppMode} from "../../model";
+import {APP_MODE} from "../../types";
 
 interface WBDrawProps {
   children?: React.ReactNode
 }
 
 const WBDrawComp = ({children}: WBDrawProps) => {
-  const {shapeState, appMode} = useContext(WhiteboardAppContext)
+  const {shapeState, settingsState} = useContext(WhiteboardAppContext)
   const ref = useRef<HTMLDivElement | null>(null);
 
   const onMouseDown = () => {
-    if (appMode === AppMode.DRAW_MODE) {
+    if (settingsState?.getAppMode() === APP_MODE.DRAWING_MODE) {
 
       shapeState?.setDrawActive(true)
     }
   }
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (shapeState?.drawActive) {
+    if (shapeState?.drawActive && settingsState?.getAppMode() === APP_MODE.DRAWING_MODE) {
       const {clientX, clientY} = e
 
       shapeState.addNewPoint(clientX, clientY)
